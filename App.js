@@ -3,9 +3,11 @@ import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, SafeAreaVie
 import axios from 'axios';
 import * as Location from 'expo-location';
 
-// 🌐 PRODUCTION CONFIG: Replace the placeholder with your public production URL
-// Example: https://your-backend.vercel.app
-const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'https://PASTE_YOUR_PRODUCTION_URL_HERE'; 
+// 🌐 PRODUCTION CONFIG: Use public environment variable exactly as required by Expo
+const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL;
+if (!API_BASE_URL) {
+  throw new Error('Missing EXPO_PUBLIC_API_URL environment variable.');
+}
 
 export default function App() {
   const [currentScreen, setCurrentScreen] = useState('Registration');
@@ -50,8 +52,8 @@ export default function App() {
           
           try {
             // Robust Ping with timeout
-            const response = await axios.post(`${API_BASE_URL}/api/tourist/location`, {
-              blockchainId: blockchainId,
+            const response = await axios.post(`${API_BASE_URL}/api/tourist/ping`, {
+              userId: blockchainId,
               lat: latitude,
               lng: longitude
             }, { timeout: 3000 });
